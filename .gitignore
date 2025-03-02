@@ -1,3 +1,5 @@
 *.gz
 node_modules
 *.pyc
+test/env
+test/test-outs

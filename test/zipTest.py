@@ -28,13 +28,14 @@ def runTest(tFile, level=None, outDir=defaultOutDir):
 	run_cmd('../bin/gzip.js --level %(level)d --file %(file)s --output %(output)s' % {'level' : level, 'file' : tFile, 'output' : out2})
 
 	result = run_cmd('diff %(file1)s %(file2)s' % {'file1' : out1, 'file2' : out2})
+	print('diff %(file1)s %(file2)s' % {'file1' : out1, 'file2' : out2})
 	if result['returncode'] == 0:
 		status = Fore.GREEN + 'PASSED' + Fore.RESET
 	else:
 		passed = False
 		status = Fore.RED + 'FAILED' + Fore.RESET
 	
-	print 'Level %(level)d: %(status)s' % {'level' : level, 'status' : status}
+	print('Level %(level)d: %(status)s' % {'level' : level, 'status' : status})
 
 	return passed
 
@@ -49,12 +50,12 @@ def runAll(level=None, testDir=defaultTestDir):
 	for tFile in os.listdir(testDir):
 		fullPath = os.path.join(testDir, tFile)
 
-		print Fore.YELLOW + tFile + Fore.RESET
+		print(Fore.YELLOW + tFile + Fore.RESET)
 
 		if runTest(fullPath, level) == False:
 			passed = False
 
-		print ''
+		print('')
 	
 	return passed
 

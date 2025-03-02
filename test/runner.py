@@ -32,7 +32,7 @@ inFile = getattr(args, 'file')
 test = getattr(args, 'test')
 
 if test == 'zip' or test == 'both':
-	print Fore.CYAN + 'Running zip tests' + Fore.RESET
+	print(Fore.CYAN + 'Running zip tests' + Fore.RESET)
 	# if the user specifies a file, only run that test
 	if inFile != None:
 		allPassed = zipTest.runTest(inFile, level)
@@ -40,7 +40,7 @@ if test == 'zip' or test == 'both':
 		allPassed = zipTest.runAll(level)
 
 if test == 'unzip' or test == 'both':
-	print Fore.CYAN + 'Running unzip tests' + Fore.RESET
+	print(Fore.CYAN + 'Running unzip tests' + Fore.RESET)
 	# if the user specifies a file, only run that test
 	if inFile != None:
 		allPassed = unzipTest.runTest(inFile, level)
@@ -51,7 +51,7 @@ if delete:
 	shutil.rmtree(outDir)
 
 if allPassed:
-	print Fore.GREEN + 'All tests passed!' + Fore.RESET
+	print(Fore.GREEN + 'All tests passed!' + Fore.RESET)
 else:
-	print Fore.RED + 'Automated test failed' + Fore.RESET
+	print(Fore.RED + 'Automated test failed' + Fore.RESET)
 	sys.exit(1)
