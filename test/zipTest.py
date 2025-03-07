@@ -1,9 +1,10 @@
 import os
-from helpers import run_cmd
+from helpers import run_cmd, diff, compress
 from colorama import Fore
 
 defaultTestDir = 'test-files'
 defaultOutDir = 'test-outs'
+gzipPath = os.path.join('..', 'bin', 'gzip.js')
 
 """
 Run a single test
@@ -24,12 +25,10 @@ def runTest(tFile, level=None, outDir=defaultOutDir):
 	out1 = os.path.join(outDir, '%(file)s.%(level)d.gz' % {'file': os.path.basename(tFile), 'level' : level})
 	out2 = os.path.join(outDir, '%(file)s.%(level)d.out.gz' % {'file': os.path.basename(tFile), 'level' : level})
 
-	run_cmd('gzip -c -%(level)d %(file)s > %(outfile)s' % {'level' : level, 'file' : tFile, 'outfile' : out1})
-	run_cmd('../bin/gzip.js --level %(level)d --file %(file)s --output %(output)s' % {'level' : level, 'file' : tFile, 'output' : out2})
+	compress(tFile, out1, level)
+	run_cmd(f'node {gzipPath} --level {level:d} --file {tFile:s} --output {out2:s}')
 
-	result = run_cmd('diff %(file1)s %(file2)s' % {'file1' : out1, 'file2' : out2})
-	print('diff %(file1)s %(file2)s' % {'file1' : out1, 'file2' : out2})
-	if result['returncode'] == 0:
+	if diff(out1, out2):
 		status = Fore.GREEN + 'PASSED' + Fore.RESET
 	else:
 		passed = False
