@@ -1,6 +1,6 @@
 import os
-from helpers import run_cmd, diff, compress
 from colorama import Fore
+from helpers import run_cmd, diff_compressed, compress
 
 defaultTestDir = 'test-files'
 defaultOutDir = 'test-outs'
@@ -15,6 +15,7 @@ Run a single test
 """
 def runTest(tFile, level=None, outDir=defaultOutDir):
 	passed = True
+
 	if level == None:
 		for x in range(1, 10):
 			if runTest(tFile, x, outDir) == False:
@@ -28,7 +29,7 @@ def runTest(tFile, level=None, outDir=defaultOutDir):
 	compress(tFile, out1, level)
 	run_cmd(f'node {gzipPath} --level {level:d} --file {tFile:s} --output {out2:s}')
 
-	if diff(out1, out2):
+	if diff_compressed(out1, out2):
 		status = Fore.GREEN + 'PASSED' + Fore.RESET
 	else:
 		passed = False

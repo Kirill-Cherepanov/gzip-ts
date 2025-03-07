@@ -1,9 +1,10 @@
 import os
 from colorama import Fore
-from helpers import run_cmd
+from helpers import run_cmd, diff, compress
 
 outDirDefault = 'test-outs'
 testDirDefault = 'test-files'
+gunzipPath = os.path.join('..', 'bin', 'gunzip.js')
 
 """
 Run a single test
@@ -25,11 +26,10 @@ def runTest(tFile, level=None, outDir=outDirDefault):
 	out1 = os.path.join(outDir, '%(file)s.%(level)d.gz' % {'file': os.path.basename(tFile), 'level' : level})
 	out2 = os.path.join(outDir, '%(file)s.%(level)d' % {'file' : os.path.basename(tFile), 'level' : level})
 
-	run_cmd('gzip -%(level)d -c %(file)s >> %(output)s' % {'level' : level, 'file' : tFile, 'output' : out1})
-	run_cmd('../bin/gunzip.js --file %(file)s --output %(output)s' % {'level' : level, 'file' : out1, 'output' : out2})
+	compress(tFile, out1, level)
+	run_cmd(f'node {gunzipPath} --file {out1} --output {out2}')
 
-	result = run_cmd('diff %(file1)s %(file2)s' % {'file1' : tFile, 'file2' : out2})
-	if result['returncode'] == 0:
+	if diff(tFile, out2):
 		status = Fore.GREEN + 'PASSED' + Fore.RESET
 	else:
 		passed = False
